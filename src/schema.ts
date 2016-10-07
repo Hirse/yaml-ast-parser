@@ -5,12 +5,12 @@ import { Type } from './type';
 function compileList(schema, name, result) {
   let exclude = [];
 
-  schema.include.forEach(function (includedSchema) {
+  schema.include.forEach((includedSchema) => {
     result = compileList(includedSchema, name, result);
   });
 
-  schema[name].forEach(function (currentType) {
-    result.forEach(function (previousType, previousIndex) {
+  schema[name].forEach((currentType) => {
+    result.forEach((previousType, previousIndex) => {
       if (previousType.tag === currentType.tag) {
         exclude.push(previousIndex);
       }
@@ -19,11 +19,10 @@ function compileList(schema, name, result) {
     result.push(currentType);
   });
 
-  return result.filter(function (type, index) {
+  return result.filter((type, index) => {
     return -1 === exclude.indexOf(index);
   });
 }
-
 
 function compileMap(/* lists... */) {
   let result = {}, index, length;
@@ -40,31 +39,9 @@ function compileMap(/* lists... */) {
 }
 
 export class Schema {
-  include: any[];
-  implicit: any[];
-  explicit: any[];
-
-  compiledImplicit: any[];
-  compiledExplicit: any[];
-  compiledTypeMap: any[];
-  constructor(definition: any) {
-    this.include = definition.include || [];
-    this.implicit = definition.implicit || [];
-    this.explicit = definition.explicit || [];
-
-    this.implicit.forEach(function (type) {
-      if (type.loadKind && 'scalar' !== type.loadKind) {
-        throw new YAMLException('There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.');
-      }
-    });
-
-    this.compiledImplicit = compileList(this, 'implicit', []);
-    this.compiledExplicit = compileList(this, 'explicit', []);
-    this.compiledTypeMap = (<any>compileMap)(this.compiledImplicit, this.compiledExplicit);
-  }
-
-  static DEFAULT = null;
-  static create = function createSchema() {
+  public static DEFAULT = null;
+  // tslint:disable-next-line only-arrow-functions
+  public static create = function createSchema() {
     let schemas, types;
 
     switch (arguments.length) {
@@ -85,11 +62,11 @@ export class Schema {
     schemas = common.toArray(schemas);
     types = common.toArray(types);
 
-    if (!schemas.every(function (schema) { return schema instanceof Schema; })) {
+    if (!schemas.every((schema) => { return schema instanceof Schema; })) {
       throw new YAMLException('Specified list of super schemas (or a single Schema object) contains a non-Schema object.');
     }
 
-    if (!types.every(function (type) { return type instanceof Type; })) {
+    if (!types.every((type) => { return type instanceof Type; })) {
       throw new YAMLException('Specified list of YAML types (or a single Type object) contains a non-Type object.');
     }
 
@@ -98,4 +75,28 @@ export class Schema {
       explicit: types
     });
   };
+
+  public include: any[];
+  public implicit: any[];
+  public explicit: any[];
+
+  public compiledImplicit: any[];
+  public compiledExplicit: any[];
+  public compiledTypeMap: any[];
+
+  constructor(definition: any) {
+    this.include = definition.include || [];
+    this.implicit = definition.implicit || [];
+    this.explicit = definition.explicit || [];
+
+    this.implicit.forEach((type) => {
+      if (type.loadKind && 'scalar' !== type.loadKind) {
+        throw new YAMLException('There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.');
+      }
+    });
+
+    this.compiledImplicit = compileList(this, 'implicit', []);
+    this.compiledExplicit = compileList(this, 'explicit', []);
+    this.compiledTypeMap = (<any> compileMap)(this.compiledImplicit, this.compiledExplicit);
+  }
 }

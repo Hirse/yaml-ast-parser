@@ -1,13 +1,12 @@
 import * as common from './common';
 
 export class Mark {
-  constructor(public name: string, public buffer: string, public position: number, public line: number, public column: number) {
-  }
+  public filePath: string;
 
-  filePath: string;
+  constructor(public name: string, public buffer: string, public position: number, public line: number, public column: number) {}
 
-  getSnippet(indent: number = 0, maxLength: number = 75) {
-    var head, start, tail, end, snippet;
+  public getSnippet(indent: number = 0, maxLength: number = 75) {
+    let head, start, tail, end, snippet;
 
     if (!this.buffer) {
       return null;
@@ -46,8 +45,8 @@ export class Mark {
       common.repeat(' ', indent + this.position - start + head.length) + '^';
   }
 
-  toString(compact: boolean = true) {
-    var snippet, where = '';
+  public toString(compact: boolean = true) {
+    let snippet, where = '';
 
     if (this.name) {
       where += 'in "' + this.name + '" ';

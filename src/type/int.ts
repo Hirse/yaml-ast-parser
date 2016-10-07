@@ -2,17 +2,17 @@ import * as common from '../common';
 import { Type } from '../type';
 
 function isHexCode(c) {
-  return ((0x30/* 0 */ <= c) && (c <= 0x39/* 9 */)) ||
-         ((0x41/* A */ <= c) && (c <= 0x46/* F */)) ||
-         ((0x61/* a */ <= c) && (c <= 0x66/* f */));
+  return ((0x30 /* 0 */ <= c) && (c <= 0x39/* 9 */)) ||
+         ((0x41 /* A */ <= c) && (c <= 0x46/* F */)) ||
+         ((0x61 /* a */ <= c) && (c <= 0x66/* f */));
 }
 
 function isOctCode(c) {
-  return ((0x30/* 0 */ <= c) && (c <= 0x37/* 7 */));
+  return ((0x30 /* 0 */ <= c) && (c <= 0x37/* 7 */));
 }
 
 function isDecCode(c) {
-  return ((0x30/* 0 */ <= c) && (c <= 0x39/* 9 */));
+  return ((0x30 /* 0 */ <= c) && (c <= 0x39/* 9 */));
 }
 
 function resolveYamlInteger(data) {
@@ -20,7 +20,7 @@ function resolveYamlInteger(data) {
     return false;
   }
 
-  var max = data.length,
+  let max = data.length,
       index = 0,
       hasDigits = false,
       ch;
@@ -55,7 +55,6 @@ function resolveYamlInteger(data) {
       }
       return hasDigits;
     }
-
 
     if (ch === 'x') {
       // base 16
@@ -106,7 +105,7 @@ function resolveYamlInteger(data) {
 }
 
 function constructYamlInteger(data) {
-  var value = data, sign = 1, ch, base, digits = [];
+  let value = data, sign = 1, ch, base, digits = [];
 
   if (value.indexOf('_') !== -1) {
     value = value.replace(/_/g, '');
@@ -136,14 +135,14 @@ function constructYamlInteger(data) {
   }
 
   if (value.indexOf(':') !== -1) {
-    value.split(':').forEach(function (v) {
+    value.split(':').forEach((v) => {
       digits.unshift(parseInt(v, 10));
     });
 
     value = 0;
     base = 1;
 
-    digits.forEach(function (d) {
+    digits.forEach((d) => {
       value += (d * base);
       base *= 60;
     });
@@ -166,10 +165,10 @@ export const intType = new Type('tag:yaml.org,2002:int', {
   construct: constructYamlInteger,
   predicate: isInteger,
   represent: {
-    binary:      function (object) { return '0b' + object.toString(2); },
-    octal:       function (object) { return '0'  + object.toString(8); },
-    decimal:     function (object) { return        object.toString(10); },
-    hexadecimal: function (object) { return '0x' + object.toString(16).toUpperCase(); }
+    binary:      (object) => { return '0b' + object.toString(2); },
+    octal:       (object) => { return '0'  + object.toString(8); },
+    decimal:     (object) => { return        object.toString(10); },
+    hexadecimal: (object) => { return '0x' + object.toString(16).toUpperCase(); }
   },
   defaultStyle: 'decimal',
   styleAliases: {

@@ -122,42 +122,40 @@ for (let i = 0; i < 256; i++) {
   }
 }
 
-
-
 class State {
-    input: string;
-    filename: string;
-    schema: any;
-    errorMap: any= {};
-    errors: YAMLException[]= [];
-    onWarning: () => any;
-    legacy: boolean;
-    implicitTypes: any;
-    typeMap: any;
-    length: number;
-    position: number;
-    line: number;
-    lineStart: number;
-    lineIndent: number;
-    documents: ast.YAMLDocument[];
-    kind: string;
-    result: ast.YAMLNode;
-    tag: string;
-    anchor: string;
-    anchorMap: { [name: string]: ast.YAMLNode};
-    tagMap: any;
-    version: string;
-    checkLineBreaks: boolean;
-    allowAnyEscape: boolean;
+    public input: string;
+    public filename: string;
+    public schema: any;
+    public errorMap: any= {};
+    public errors: YAMLException[]= [];
+    public onWarning: () => any;
+    public legacy: boolean;
+    public implicitTypes: any;
+    public typeMap: any;
+    public length: number;
+    public position: number;
+    public line: number;
+    public lineStart: number;
+    public lineIndent: number;
+    public documents: ast.YAMLDocument[];
+    public kind: string;
+    public result: ast.YAMLNode;
+    public tag: string;
+    public anchor: string;
+    public anchorMap: { [name: string]: ast.YAMLNode};
+    public tagMap: any;
+    public version: string;
+    public checkLineBreaks: boolean;
+    public allowAnyEscape: boolean;
 
     constructor(input: string, options: any) {
         this.input = input;
 
-        this.filename  = options['filename']  || null;
-        this.schema    = options['schema']    || DEFAULT_FULL_SCHEMA;
-        this.onWarning = options['onWarning'] || null;
-        this.legacy     = options['legacy']    || false;
-        this.allowAnyEscape = options['allowAnyEscape']    || false;
+        this.filename  = options.filename  || null;
+        this.schema    = options.schema    || DEFAULT_FULL_SCHEMA;
+        this.onWarning = options.onWarning || null;
+        this.legacy     = options.legacy    || false;
+        this.allowAnyEscape = options.allowAnyEscape    || false;
 
         this.implicitTypes = this.schema.compiledImplicit;
         this.typeMap       = this.schema.compiledTypeMap;
@@ -179,7 +177,7 @@ function generateError(state, message) {
 }
 
 function throwError(state: State, message) {
-    //FIXME
+    // FIXME
     let error = generateError(state, message);
     let hash = error.message + error.mark.position;
     if (!state.errorMap[hash]) {
@@ -192,24 +190,24 @@ function throwError(state: State, message) {
             return;
         }
         let c = state.input.charAt(state.position);
-        if (c == '\n') {
+        if (c === '\n') {
 
             state.position--;
-            if (state.position == or) {
+            if (state.position === or) {
                 state.position += 1;
             }
             return;
         }
-        if (c == '\r') {
+        if (c === '\r') {
             state.position--;
-            if (state.position == or) {
+            if (state.position === or) {
                 state.position += 1;
             }
             return;
         }
         state.position++;
     }
-  //throw generateError(state, message);
+  // throw generateError(state, message);
 }
 
 function throwWarning(state, message) {
@@ -218,13 +216,11 @@ function throwWarning(state, message) {
   if (state.onWarning) {
     state.onWarning.call(null, error);
   } else {
-    //throw error;
+    // throw error;
   }
 }
 
-
 let directiveHandlers = {
-
   YAML: function handleYamlDirective(state, name, args) {
 
       let match, major, minor;
@@ -285,11 +281,10 @@ let directiveHandlers = {
     }
 };
 
-
 function captureSegment(state: State, start: number, end: number, checkJson: boolean): void {
   let _position, _length, _character, _result;
   let scalar: ast.YAMLScalar = <ast.YAMLScalar> state.result;
-  if (scalar.startPosition == -1) {
+  if (scalar.startPosition === -1) {
       scalar.startPosition = start;
   }
   if (start <= end) {
@@ -332,10 +327,10 @@ function mergeMappings(state: State, destination, source) {
 function storeMappingPair(state: State, _result: ast.YamlMap, keyTag, keyNode: ast.YAMLNode,
                           valueNode: ast.YAMLNode): ast.YamlMap {
   let index, quantity;
-    if (keyNode == null) {
-        return;
-    }
-  //keyNode = String(keyNode);
+  if (keyNode == null) {
+      return;
+  }
+  // keyNode = String(keyNode);
 
   if (null === _result) {
     _result = {
@@ -356,14 +351,14 @@ function storeMappingPair(state: State, _result: ast.YamlMap, keyTag, keyNode: a
   //   }
   // } else {
 
-       let mapping = ast.newMapping(<ast.YAMLScalar> keyNode, valueNode);
-       mapping.parent = _result;
-       keyNode.parent = mapping;
-      if (valueNode != null) {
-          valueNode.parent = mapping;
-      }
-      _result.mappings.push(mapping);
-    _result.endPosition = valueNode ? valueNode.endPosition : keyNode.endPosition + 1; //FIXME.workaround should be position of ':' indeed
+  let mapping = ast.newMapping(<ast.YAMLScalar> keyNode, valueNode);
+  mapping.parent = _result;
+  keyNode.parent = mapping;
+  if (valueNode != null) {
+      valueNode.parent = mapping;
+  }
+  _result.mappings.push(mapping);
+  _result.endPosition = valueNode ? valueNode.endPosition : keyNode.endPosition + 1; // FIXME.workaround should be position of ':' indeed
   // }
 
   return _result;
@@ -459,7 +454,6 @@ function writeFoldedLines(state: State, scalar: ast.YAMLScalar, count: number) {
   }
 }
 
-
 function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
   let preceding,
       following,
@@ -472,9 +466,9 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
       _kind = state.kind,
       _result = state.result,
       ch;
-  let state_result = ast.newScalar();
-  state_result.plainScalar = true;
-  state.result = state_result;
+  let stateResult = ast.newScalar();
+  stateResult.plainScalar = true;
+  state.result = stateResult;
   ch = state.input.charCodeAt(state.position);
 
   if (is_WS_OR_EOL(ch)             ||
@@ -503,7 +497,7 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
   }
 
   state.kind = 'scalar';
-  //state.result = '';
+  // state.result = '';
   captureStart = captureEnd = state.position;
   hasPendingContent = false;
 
@@ -548,7 +542,7 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
 
     if (hasPendingContent) {
       captureSegment(state, captureStart, captureEnd, false);
-      writeFoldedLines(state, state_result, state.line - _line);
+      writeFoldedLines(state, stateResult, state.line - _line);
       captureStart = captureEnd = state.position;
       hasPendingContent = false;
     }
@@ -558,16 +552,15 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
     }
 
     ch = state.input.charCodeAt(++state.position);
-      if (state.position >= state.input.length) {
-          return false;
-
-      }
+    if (state.position >= state.input.length) {
+        return false;
+    }
   }
 
   captureSegment(state, captureStart, captureEnd, false);
 
-  if (state.result.startPosition != -1) {
-    state_result.rawValue = state.input.substring(state_result.startPosition, state_result.endPosition);
+  if (state.result.startPosition !== -1) {
+    stateResult.rawValue = state.input.substring(stateResult.startPosition, stateResult.endPosition);
     return true;
   }
 
@@ -588,22 +581,22 @@ function readSingleQuotedScalar(state: State, nodeIndent) {
   let scalar = ast.newScalar();
   state.kind = 'scalar';
   state.result = scalar;
-    scalar.startPosition = state.position;
+  scalar.startPosition = state.position;
 
-    state.position++;
+  state.position++;
   captureStart = captureEnd = state.position;
 
   while (0 !== (ch = state.input.charCodeAt(state.position))) {
-      //console.log('ch: <' + String.fromCharCode(ch) + '>');
+      // console.log('ch: <' + String.fromCharCode(ch) + '>');
       if (0x27 /* ' */ === ch) {
         captureSegment(state, captureStart, state.position, true);
         ch = state.input.charCodeAt(++state.position);
 
-      //console.log('next: <' + String.fromCharCode(ch) + '>');
-          scalar.endPosition = state.position;
-          if (0x27 /* ' */ === ch) {
-          captureStart = captureEnd = state.position;
-          state.position++;
+      // console.log('next: <' + String.fromCharCode(ch) + '>');
+        scalar.endPosition = state.position;
+        if (0x27 /* ' */ === ch) {
+        captureStart = captureEnd = state.position;
+        state.position++;
       } else {
         return true;
       }
@@ -644,17 +637,16 @@ function readDoubleQuotedScalar(state: State, nodeIndent: number) {
   let scalar = ast.newScalar();
   scalar.doubleQuoted = true;
   state.result = scalar;
-    scalar.startPosition = state.position;
-    state.position++;
-    captureStart = captureEnd = state.position;
+  scalar.startPosition = state.position;
+  state.position++;
+  captureStart = captureEnd = state.position;
   while (0 !== (ch = state.input.charCodeAt(state.position))) {
     if (0x22 /* " */ === ch) {
       captureSegment(state, captureStart, state.position, true);
       state.position++;
-        scalar.endPosition = state.position;
-        scalar.rawValue = state.input.substring(scalar.startPosition, scalar.endPosition);
-        return true;
-
+      scalar.endPosition = state.position;
+      scalar.rawValue = state.input.substring(scalar.startPosition, scalar.endPosition);
+      return true;
     } else if (0x5C /* \ */ === ch) {
       captureSegment(state, captureStart, state.position, true);
       ch = state.input.charCodeAt(++state.position);
@@ -762,9 +754,9 @@ function readFlowCollection(state: State, nodeIndent) {
       _result.endPosition = state.position;
       return true;
     } else if (!readNext) {
-       let p = state.position;
+      let p = state.position;
       throwError(state, 'missed comma between flow collection entries');
-        state.position = p + 1;
+      state.position = p + 1;
     }
 
     keyTag = keyNode = valueNode = null;
@@ -965,7 +957,7 @@ function readBlockScalar(state: State, nodeIndent) {
   let needMinus = false;
   while (true) {
       let c = state.input[i];
-      if (c == '\r' || c == '\n') {
+      if (c === '\r' || c === '\n') {
           if (needMinus) {
               i--;
           }
@@ -975,7 +967,7 @@ function readBlockScalar(state: State, nodeIndent) {
           break;
       }
       i--;
-      //needMinus=true;
+      // needMinus=true;
 
   }
   sc.endPosition = i;
@@ -993,14 +985,13 @@ function readBlockSequence(state: State, nodeIndent) {
       ch;
 
   if (null !== state.anchor) {
-      _result.anchorId = state.anchor;
+    _result.anchorId = state.anchor;
     state.anchorMap[state.anchor] = _result;
   }
   _result.startPosition = state.position;
   ch = state.input.charCodeAt(state.position);
 
   while (0 !== ch) {
-
     if (0x2D /* - */ !== ch) {
       break;
     }
@@ -1024,7 +1015,7 @@ function readBlockSequence(state: State, nodeIndent) {
 
     _line = state.line;
     composeNode(state, nodeIndent, CONTEXT_BLOCK_IN, false, true);
-      state.result.parent = _result;
+    state.result.parent = _result;
     _result.items.push(state.result);
     skipSeparationSpace(state, true, -1);
 
@@ -1061,9 +1052,9 @@ function readBlockMapping(state: State, nodeIndent, flowIndent) {
       atExplicitKey = false,
       detected      = false,
       ch;
-    _result.startPosition = state.position;
+  _result.startPosition = state.position;
   if (null !== state.anchor) {
-      _result.anchorId = state.anchor;
+    _result.anchorId = state.anchor;
     state.anchorMap[state.anchor] = _result;
   }
 
@@ -1380,8 +1371,7 @@ function composeNode(state: State, parentIndent, nodeContext, allowToSeek, allow
       typeQuantity,
       type,
       flowIndent,
-      blockIndent,
-      _result;
+      blockIndent;
 
   state.tag    = null;
   state.anchor = null;
@@ -1478,16 +1468,15 @@ function composeNode(state: State, parentIndent, nodeContext, allowToSeek, allow
   }
 
   if (null !== state.tag && '!' !== state.tag) {
-    if (state.tag == "!include") {
+    if (state.tag === '!include') {
         if (!state.result) {
             state.result = ast.newScalar();
             state.result.startPosition = state.position;
             state.result.endPosition = state.position;
-            throwError(state, "!include without value");
+            throwError(state, '!include without value');
         }
         state.result.kind = ast.Kind.INCLUDE_REF;
-    }
-    else if ('?' === state.tag) {
+    } else if ('?' === state.tag) {
       for (typeIndex = 0, typeQuantity = state.implicitTypes.length;
            typeIndex < typeQuantity;
            typeIndex += 1) {
@@ -1496,9 +1485,9 @@ function composeNode(state: State, parentIndent, nodeContext, allowToSeek, allow
         // Implicit resolving is not allowed for non-scalar types, and '?'
         // non-specific tag is only assigned to plain scalars. So, it isn't
         // needed to check for 'kind' conformity.
-        let vl = state.result['value'];
+        let vl = state.result.value;
         if (type.resolve(vl)) { // `state.result` updated in resolver if matched
-          state.result.valueObject = type.construct(state.result['value']);
+          state.result.valueObject = type.construct(state.result.value);
           state.tag = type.tag;
           if (null !== state.anchor) {
             state.result.anchorId = state.anchor;
@@ -1643,7 +1632,6 @@ function readDocument(state: State) {
   }
 }
 
-
 function loadDocuments(input: string, options) {
   input = String(input);
   options = options || {};
@@ -1682,17 +1670,16 @@ function loadDocuments(input: string, options) {
     if (state.position <= q) {
         for (; state.position < state.length - 1; state.position++) {
             let c = state.input.charAt(state.position);
-            if (c == '\n') {
+            if (c === '\n') {
                 break;
             }
         }
-        //skip to the new lne
+        // skip to the new lne
     }
   }
   state.documents.forEach(x => x.errors = state.errors);
   return state.documents;
 }
-
 
 export function loadAll(input: string, iterator, options) {
   let documents = loadDocuments(input, options), index, length;
@@ -1702,29 +1689,28 @@ export function loadAll(input: string, iterator, options) {
   }
 }
 
-
 export function load(input: string, options) {
-  let documents = loadDocuments(input, options), index, length;
+  let documents = loadDocuments(input, options);
 
   if (0 === documents.length) {
     /*eslint-disable no-undefined*/
     return undefined;
   } else if (1 === documents.length) {
       let result = documents[0];
-      //root node always takes whole file
+      // root node always takes whole file
       result.endPosition = input.length;
       if (result.startPosition > result.endPosition) {
           result.startPosition = result.endPosition;
       }
       return result;
   }
-    let e = new YAMLException('expected a single document in the stream, but found more');
-    e.mark = new Mark("", "", 0, 0, 0);
-    e.mark.position = documents[0].endPosition;
-    documents[0].errors.push(e);
-    //it is an artifact which is caused by the fact that we are checking next char before stopping parse
+  let e = new YAMLException('expected a single document in the stream, but found more');
+  e.mark = new Mark('', '', 0, 0, 0);
+  e.mark.position = documents[0].endPosition;
+  documents[0].errors.push(e);
+  // it is an artifact which is caused by the fact that we are checking next char before stopping parse
 
-    return documents[0];
+  return documents[0];
 }
 
 export function safeLoadAll(input: string, output, options) {

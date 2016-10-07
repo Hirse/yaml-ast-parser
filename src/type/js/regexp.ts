@@ -28,6 +28,7 @@ function resolveJavascriptRegExp(data) {
   }
 
   try {
+    // tslint:disable-next-line no-unused-variable
     let dummy = new RegExp(regexp, modifiers);
     return true;
   } catch (error) {

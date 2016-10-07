@@ -13,8 +13,6 @@ function resolveYamlFloat(data) {
     return false;
   }
 
-  let value, sign, base, digits;
-
   if (!YAML_FLOAT_PATTERN.test(data)) {
     return false;
   }
@@ -24,8 +22,8 @@ function resolveYamlFloat(data) {
 function constructYamlFloat(data) {
   let value, sign, base, digits;
 
-  value  = data.replace(/_/g, '').toLowerCase();
-  sign   = '-' === value[0] ? -1 : 1;
+  value = data.replace(/_/g, '').toLowerCase();
+  sign = '-' === value[0] ? -1 : 1;
   digits = [];
 
   if (0 <= '+-'.indexOf(value[0])) {
@@ -39,14 +37,14 @@ function constructYamlFloat(data) {
     return NaN;
 
   } else if (0 <= value.indexOf(':')) {
-    value.split(':').forEach(function (v) {
-      digits.unshift((<any>parseFloat)(v, 10));
+    value.split(':').forEach((v) => {
+      digits.unshift((<any> parseFloat)(v, 10));
     });
 
     value = 0.0;
     base = 1;
 
-    digits.forEach(function (d) {
+    digits.forEach((d) => {
       value += d * base;
       base *= 60;
     });
@@ -54,36 +52,42 @@ function constructYamlFloat(data) {
     return sign * value;
 
   }
-  return sign * (<any>parseFloat)(value, 10);
+  return sign * (<any> parseFloat)(value, 10);
 }
 
 function representYamlFloat(object, style) {
   if (isNaN(object)) {
     switch (style) {
-    case 'lowercase':
-      return '.nan';
-    case 'uppercase':
-      return '.NAN';
-    case 'camelcase':
-      return '.NaN';
+      case 'lowercase':
+        return '.nan';
+      case 'uppercase':
+        return '.NAN';
+      case 'camelcase':
+        return '.NaN';
+      default:
+        break;
     }
   } else if (Number.POSITIVE_INFINITY === object) {
     switch (style) {
-    case 'lowercase':
-      return '.inf';
-    case 'uppercase':
-      return '.INF';
-    case 'camelcase':
-      return '.Inf';
+      case 'lowercase':
+        return '.inf';
+      case 'uppercase':
+        return '.INF';
+      case 'camelcase':
+        return '.Inf';
+      default:
+        break;
     }
   } else if (Number.NEGATIVE_INFINITY === object) {
     switch (style) {
-    case 'lowercase':
-      return '-.inf';
-    case 'uppercase':
-      return '-.INF';
-    case 'camelcase':
-      return '-.Inf';
+      case 'lowercase':
+        return '-.inf';
+      case 'uppercase':
+        return '-.INF';
+      case 'camelcase':
+        return '-.Inf';
+      default:
+        break;
     }
   } else if (common.isNegativeZero(object)) {
     return '-0.0';
@@ -93,7 +97,7 @@ function representYamlFloat(object, style) {
 
 function isFloat(object) {
   return ('[object Number]' === Object.prototype.toString.call(object)) &&
-         (0 !== object % 1 || common.isNegativeZero(object));
+    (0 !== object % 1 || common.isNegativeZero(object));
 }
 
 export const floatType = new Type('tag:yaml.org,2002:float', {

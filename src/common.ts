@@ -16,7 +16,7 @@ export function toArray(sequence) {
 }
 
 export function extend(target, source) {
-  var index, length, key, sourceKeys;
+  let index, length, key, sourceKeys;
 
   if (source) {
     sourceKeys = Object.keys(source);
@@ -31,7 +31,8 @@ export function extend(target, source) {
 }
 
 export function repeat(string, count) {
-  var result = '', cycle;
+  let result = '';
+  let cycle;
 
   for (cycle = 0; cycle < count; cycle += 1) {
     result += string;

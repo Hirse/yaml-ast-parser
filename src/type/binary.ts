@@ -1,3 +1,5 @@
+// tslint:disable no-bitwise
+
 import { Type } from '../type';
 
 // [ 64, 65, 66 ] -> [ padding, CR, LF ]
@@ -8,7 +10,7 @@ function resolveYamlBinary(data) {
     return false;
   }
 
-  let code, idx, bitlen = 0, len = 0, max = data.length, map = BASE64_MAP;
+  let code, idx, bitlen = 0, max = data.length, map = BASE64_MAP;
 
   // Convert one by one.
   for (idx = 0; idx < max; idx++) {
@@ -28,7 +30,7 @@ function resolveYamlBinary(data) {
 }
 
 function constructYamlBinary(data): any[] | Buffer {
-  let code, idx, tailbits,
+  let idx, tailbits,
       input = data.replace(/[\r\n=]/g, ''), // remove CR/LF & padding to simplify scan
       max = input.length,
       map = BASE64_MAP,

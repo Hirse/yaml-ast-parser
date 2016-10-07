@@ -105,11 +105,11 @@ function encodeHex(character) {
 }
 
 function State(options) {
-  this.schema      = options['schema'] || DEFAULT_FULL_SCHEMA;
-  this.indent      = Math.max(1, (options['indent'] || 2));
-  this.skipInvalid = options['skipInvalid'] || false;
-  this.flowLevel   = (common.isNothing(options['flowLevel']) ? -1 : options['flowLevel']);
-  this.styleMap    = compileStyleMap(this.schema, options['styles'] || null);
+  this.schema      = options.schema || DEFAULT_FULL_SCHEMA;
+  this.indent      = Math.max(1, (options.indent || 2));
+  this.skipInvalid = options.skipInvalid || false;
+  this.flowLevel   = (common.isNothing(options.flowLevel) ? -1 : options.flowLevel);
+  this.styleMap    = compileStyleMap(this.schema, options.styles || null);
 
   this.implicitTypes = this.schema.compiledImplicit;
   this.explicitTypes = this.schema.compiledExplicit;
@@ -171,7 +171,7 @@ function StringBuilder(source) {
   this.checkpoint = 0;
 }
 
-StringBuilder.prototype.takeUpTo = function (position) {
+StringBuilder.prototype.takeUpTo = (position) => {
   let er;
 
   if (position < this.checkpoint) {
@@ -186,7 +186,7 @@ StringBuilder.prototype.takeUpTo = function (position) {
   return this;
 };
 
-StringBuilder.prototype.escapeChar = function () {
+StringBuilder.prototype.escapeChar = () => {
   let character, esc;
 
   character = this.source.charCodeAt(this.checkpoint);
@@ -197,7 +197,7 @@ StringBuilder.prototype.escapeChar = function () {
   return this;
 };
 
-StringBuilder.prototype.finish = function () {
+StringBuilder.prototype.finish = () => {
   if (this.source.length > this.checkpoint) {
     this.takeUpTo(this.source.length);
   }
@@ -213,11 +213,11 @@ function writeScalar(state, object, level) {
     state.dump = "''";
     return;
   }
-  if (object.indexOf('!include') == 0) {
+  if (object.indexOf('!include') === 0) {
     state.dump = '' + object; // FIXME
     return;
   }
-  if (object.indexOf('!$$$novalue') == 0) {
+  if (object.indexOf('!$$$novalue') === 0) {
     state.dump = ''; // FIXME
     return;
   }

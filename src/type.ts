@@ -21,8 +21,8 @@ function compileStyleAliases(map) {
   let result = {};
 
   if (null !== map) {
-    Object.keys(map).forEach(function (style) {
-      map[style].forEach(function (alias) {
+    Object.keys(map).forEach((style) => {
+      map[style].forEach((alias) => {
         result[String(alias)] = style;
       });
     });
@@ -42,14 +42,14 @@ export function Type(tag, options): void {
 
   // TODO: Add tag format check.
   this.tag          = tag;
-  this.kind         = options['kind']         || null;
-  this.resolve      = options['resolve']      || function () { return true; };
-  this.construct    = options['construct']    || function (data) { return data; };
-  this.instanceOf   = options['instanceOf']   || null;
-  this.predicate    = options['predicate']    || null;
-  this.represent    = options['represent']    || null;
-  this.defaultStyle = options['defaultStyle'] || null;
-  this.styleAliases = compileStyleAliases(options['styleAliases'] || null);
+  this.kind         = options.kind         || null;
+  this.resolve      = options.resolve      || (() => { return true; });
+  this.construct    = options.construct    || ((data) => { return data; });
+  this.instanceOf   = options.instanceOf   || null;
+  this.predicate    = options.predicate    || null;
+  this.represent    = options.represent    || null;
+  this.defaultStyle = options.defaultStyle || null;
+  this.styleAliases = compileStyleAliases(options.styleAliases || null);
 
   if (-1 === YAML_NODE_KINDS.indexOf(this.kind)) {
     throw new YAMLException('Unknown kind "' + this.kind + '" is specified for "' + tag + '" YAML type.');

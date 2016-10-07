@@ -17,10 +17,7 @@ function resolveYamlTimestamp(data) {
     return false;
   }
 
-  let match, year, month, day, hour, minute, second, fraction = 0,
-      delta = null, tz_hour, tz_minute, date;
-
-  match = YAML_TIMESTAMP_REGEXP.exec(data);
+  let match = YAML_TIMESTAMP_REGEXP.exec(data);
 
   if (null === match) {
     return false;
@@ -30,7 +27,7 @@ function resolveYamlTimestamp(data) {
 }
 
 function constructYamlTimestamp(data) {
-  let match, year, month, day, hour, minute, second, fraction:number|string = 0,
+  let match, year, month, day, hour, minute, second, fraction: number|string = 0,
       delta = null, tz_hour, tz_minute, date;
 
   match = YAML_TIMESTAMP_REGEXP.exec(data);
@@ -57,8 +54,8 @@ function constructYamlTimestamp(data) {
 
   if (match[7]) {
     fraction = match[7].slice(0, 3);
-    while ((<any>fraction).length < 3) { // milli-seconds
-      fraction =fraction+ '0';
+    while ((<any> fraction).length < 3) { // milli-seconds
+      fraction = fraction + '0';
     }
     fraction = +fraction;
   }
@@ -74,7 +71,7 @@ function constructYamlTimestamp(data) {
     }
   }
 
-  date = new Date(Date.UTC(year, month, day, hour, minute, second, <number>fraction));
+  date = new Date(Date.UTC(year, month, day, hour, minute, second, <number> fraction));
 
   if (delta) {
     date.setTime(date.getTime() - delta);

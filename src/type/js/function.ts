@@ -9,9 +9,7 @@ function resolveJavascriptFunction(data) {
 
   try {
     let source = '(' + data + ')',
-        ast    = esprima.parse(source, { range: true }),
-        params = [],
-        body;
+        ast    = esprima.parse(source, { range: true });
 
     if ('Program'             !== ast.type         ||
         1                     !== ast.body.length  ||
@@ -40,7 +38,7 @@ function constructJavascriptFunction(data) {
     throw new Error('Failed to resolve function');
   }
 
-  ast.body[0]['expression'].params.forEach(function (param) {
+  ast.body[0]['expression'].params.forEach((param) => {
     params.push(param.name);
   });
 
@@ -48,7 +46,6 @@ function constructJavascriptFunction(data) {
 
   // Esprima's ranges include the first '{' and the last '}' characters on
   // function expressions. So cut them out.
-  /*eslint-disable no-new-func*/
   return new (<any> Function)(params, source.slice(body[0] + 1, body[1] - 1));
 }
 

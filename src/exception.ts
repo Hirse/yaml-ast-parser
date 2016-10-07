@@ -1,10 +1,10 @@
 import { Mark } from './mark';
 
 export class YAMLException {
-  message: string;
-  reason: string;
-  name: string;
-  mark: Mark;
+  public message: string;
+  public reason: string;
+  public name: string;
+  public mark: Mark;
 
   constructor(reason: string, mark: Mark = null) {
     this.name = 'YAMLException';
@@ -13,10 +13,8 @@ export class YAMLException {
     this.message = this.toString(false);
   }
 
-  toString(compact: boolean = false) {
-    var result;
-
-    result = 'JS-YAML: ' + (this.reason || '(unknown reason)');
+  public toString(compact: boolean = false) {
+    let result = 'JS-YAML: ' + (this.reason || '(unknown reason)');
 
     if (!compact && this.mark) {
       result += ' ' + this.mark.toString();

@@ -4,15 +4,15 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "pullall" : "dev-env-installer pullall",
-    "buildall" : "dev-env-installer buildall",
-    "testall" : "dev-env-installer testall",
+    "pullall": "dev-env-installer pullall",
+    "buildall": "dev-env-installer buildall",
+    "testall": "dev-env-installer testall",
     "devInstall": "dev-env-installer install"
   },
   "dependencies": {
-
+    "esprima": "^3.0.0"
   },
-  "typings":"dist/index.d.ts",
+  "typings": "dist/index",
   "repository": {
     "type": "git",
     "url": "https://github.com/mulesoft-labs/yaml-ast-parser.git"
@@ -28,9 +28,10 @@
     "url": "https://github.com/mulesoft-labs/yaml-ast-parser/issues"
   },
   "devDependencies": {
-    "typescript": "1.8.7",
-    "typings": "^0.5.1",
-    "dev-env-installer":"0.0.5",
-    "rimraf":"*"
+    "@types/esprima": "^2.1.33",
+    "@types/node": "^6.0.45",
+    "dev-env-installer": "^0.0.6",
+    "rimraf": "^2.5.4",
+    "typescript": "2.0.3"
   }
 }

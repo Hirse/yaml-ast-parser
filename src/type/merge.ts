@@ -1,14 +1,10 @@
-
-
-'use strict';
-
-import Type = require('../type');
+import { Type } from '../type';
 
 function resolveYamlMerge(data) {
   return '<<' === data || null === data;
 }
 
-export = new Type('tag:yaml.org,2002:merge', {
+export const mergeType = new Type('tag:yaml.org,2002:merge', {
   kind: 'scalar',
   resolve: resolveYamlMerge
 });

@@ -1,10 +1,6 @@
+import { Type } from '../type';
 
-
-'use strict';
-
-import Type = require('../type');
-
-var YAML_TIMESTAMP_REGEXP = new RegExp(
+let YAML_TIMESTAMP_REGEXP = new RegExp(
   '^([0-9][0-9][0-9][0-9])'          + // [1] year
   '-([0-9][0-9]?)'                   + // [2] month
   '-([0-9][0-9]?)'                   + // [3] day
@@ -21,7 +17,7 @@ function resolveYamlTimestamp(data) {
     return false;
   }
 
-  var match, year, month, day, hour, minute, second, fraction = 0,
+  let match, year, month, day, hour, minute, second, fraction = 0,
       delta = null, tz_hour, tz_minute, date;
 
   match = YAML_TIMESTAMP_REGEXP.exec(data);
@@ -34,7 +30,7 @@ function resolveYamlTimestamp(data) {
 }
 
 function constructYamlTimestamp(data) {
-  var match, year, month, day, hour, minute, second, fraction:number|string = 0,
+  let match, year, month, day, hour, minute, second, fraction:number|string = 0,
       delta = null, tz_hour, tz_minute, date;
 
   match = YAML_TIMESTAMP_REGEXP.exec(data);
@@ -91,7 +87,7 @@ function representYamlTimestamp(object /*, style*/) {
   return object.toISOString();
 }
 
-export = new Type('tag:yaml.org,2002:timestamp', {
+export const timestampType = new Type('tag:yaml.org,2002:timestamp', {
   kind: 'scalar',
   resolve: resolveYamlTimestamp,
   construct: constructYamlTimestamp,

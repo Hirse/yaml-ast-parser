@@ -1,10 +1,4 @@
-
-
-declare function require(n:string):any
-
-'use strict';
-
-import Type = require('../type');
+import { Type } from '../type';
 
 function resolveYamlBoolean(data) {
   if (null === data) {
@@ -27,7 +21,7 @@ function isBoolean(object) {
   return '[object Boolean]' === Object.prototype.toString.call(object);
 }
 
-export = new Type('tag:yaml.org,2002:bool', {
+export const boolType = new Type('tag:yaml.org,2002:bool', {
   kind: 'scalar',
   resolve: resolveYamlBoolean,
   construct: constructYamlBoolean,

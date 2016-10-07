@@ -1,0 +1,14 @@
+{
+	"extends": "tslint:latest",
+	"rules": {
+		"quotemark": [true, "single", "avoid-escape"],
+		"indent": [true, "spaces"],
+		"variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+		"object-literal-sort-keys": false,
+		"trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+		"object-literal-shorthand": false,
+		"max-line-length": [false],
+		"interface-name": [false],
+		"forin": false
+	}
+}

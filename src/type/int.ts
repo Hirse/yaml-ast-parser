@@ -1,9 +1,5 @@
-
-
-'use strict';
-
-import common = require('../common');
-import Type   = require('../type');
+import * as common from '../common';
+import { Type } from '../type';
 
 function isHexCode(c) {
   return ((0x30/* 0 */ <= c) && (c <= 0x39/* 9 */)) ||
@@ -164,7 +160,7 @@ function isInteger(object) {
          (0 === object % 1 && !common.isNegativeZero(object));
 }
 
-export = new Type('tag:yaml.org,2002:int', {
+export const intType = new Type('tag:yaml.org,2002:int', {
   kind: 'scalar',
   resolve: resolveYamlInteger,
   construct: constructYamlInteger,

@@ -1,10 +1,8 @@
+import { Type } from '../type';
 
-
-'use strict';
-
-import Type = require('../type');
-
-export = new Type('tag:yaml.org,2002:str', {
+export const strType = new Type('tag:yaml.org,2002:str', {
   kind: 'scalar',
-  construct: function (data) { return null !== data ? data : ''; }
+  construct: (data) => {
+    return null !== data ? data : '';
+  }
 });

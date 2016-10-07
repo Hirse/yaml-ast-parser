@@ -1,15 +1,10 @@
-
-
-'use strict';
-
-import Type = require('../../type');
+import { Type } from '../../type';
 
 function resolveJavascriptUndefined() {
   return true;
 }
 
 function constructJavascriptUndefined() {
-  /*eslint-disable no-undefined*/
   return undefined;
 }
 
@@ -21,7 +16,7 @@ function isUndefined(object) {
   return 'undefined' === typeof object;
 }
 
-export = new Type('tag:yaml.org,2002:js/undefined', {
+export const undefinedType = new Type('tag:yaml.org,2002:js/undefined', {
   kind: 'scalar',
   resolve: resolveJavascriptUndefined,
   construct: constructJavascriptUndefined,

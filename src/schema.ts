@@ -1,16 +1,9 @@
-
-
-'use strict';
-
-/*eslint-disable max-len*/
-
-import common        = require('./common');
-import YAMLException = require('./exception');
-import Type          = require('./type');
-
+import * as common from './common';
+import { YAMLException } from './exception';
+import { Type } from './type';
 
 function compileList(schema, name, result) {
-  var exclude = [];
+  let exclude = [];
 
   schema.include.forEach(function (includedSchema) {
     result = compileList(includedSchema, name, result);
@@ -33,7 +26,7 @@ function compileList(schema, name, result) {
 
 
 function compileMap(/* lists... */) {
-  var result = {}, index, length;
+  let result = {}, index, length;
 
   function collectType(type) {
     result[type.tag] = type;
@@ -46,16 +39,15 @@ function compileMap(/* lists... */) {
   return result;
 }
 
-class Schema {
+export class Schema {
+  include: any[];
+  implicit: any[];
+  explicit: any[];
 
-  include:any[]
-  implicit:any[]
-  explicit:any[]
-
-  compiledImplicit:any[]
-  compiledExplicit:any[]
-  compiledTypeMap:any[]
-  constructor(definition:any) {
+  compiledImplicit: any[];
+  compiledExplicit: any[];
+  compiledTypeMap: any[];
+  constructor(definition: any) {
     this.include = definition.include || [];
     this.implicit = definition.implicit || [];
     this.explicit = definition.explicit || [];
@@ -71,41 +63,39 @@ class Schema {
     this.compiledTypeMap = (<any>compileMap)(this.compiledImplicit, this.compiledExplicit);
   }
 
-  static DEFAULT=null;
-  static create=function createSchema() {
-      var schemas, types;
+  static DEFAULT = null;
+  static create = function createSchema() {
+    let schemas, types;
 
-      switch (arguments.length) {
-        case 1:
-          schemas = Schema.DEFAULT;
-          types = arguments[0];
-          break;
+    switch (arguments.length) {
+      case 1:
+        schemas = Schema.DEFAULT;
+        types = arguments[0];
+        break;
 
-        case 2:
-          schemas = arguments[0];
-          types = arguments[1];
-          break;
+      case 2:
+        schemas = arguments[0];
+        types = arguments[1];
+        break;
 
-        default:
-          throw new YAMLException('Wrong number of arguments for Schema.create function');
-      }
-
-      schemas = common.toArray(schemas);
-      types = common.toArray(types);
-
-      if (!schemas.every(function (schema) { return schema instanceof Schema; })) {
-        throw new YAMLException('Specified list of super schemas (or a single Schema object) contains a non-Schema object.');
-      }
-
-      if (!types.every(function (type) { return type instanceof Type; })) {
-        throw new YAMLException('Specified list of YAML types (or a single Type object) contains a non-Type object.');
-      }
-
-      return new Schema({
-        include: schemas,
-        explicit: types
-      });
+      default:
+        throw new YAMLException('Wrong number of arguments for Schema.create function');
     }
-}
 
-export = Schema;
+    schemas = common.toArray(schemas);
+    types = common.toArray(types);
+
+    if (!schemas.every(function (schema) { return schema instanceof Schema; })) {
+      throw new YAMLException('Specified list of super schemas (or a single Schema object) contains a non-Schema object.');
+    }
+
+    if (!types.every(function (type) { return type instanceof Type; })) {
+      throw new YAMLException('Specified list of YAML types (or a single Type object) contains a non-Type object.');
+    }
+
+    return new Schema({
+      include: schemas,
+      explicit: types
+    });
+  };
+}

@@ -1,17 +1,10 @@
-
-
-'use strict';
-
-
 export function isNothing(subject) {
   return (typeof subject === 'undefined') || (null === subject);
 }
 
-
 export function isObject(subject) {
   return (typeof subject === 'object') && (null !== subject);
 }
-
 
 export function toArray(sequence) {
   if (Array.isArray(sequence)) {
@@ -19,9 +12,8 @@ export function toArray(sequence) {
   } else if (isNothing(sequence)) {
     return [];
   }
-  return [ sequence ];
+  return [sequence];
 }
-
 
 export function extend(target, source) {
   var index, length, key, sourceKeys;
@@ -38,7 +30,6 @@ export function extend(target, source) {
   return target;
 }
 
-
 export function repeat(string, count) {
   var result = '', cycle;
 
@@ -49,9 +40,6 @@ export function repeat(string, count) {
   return result;
 }
 
-
 export function isNegativeZero(number) {
   return (0 === number) && (Number.NEGATIVE_INFINITY === 1 / number);
 }
-
-

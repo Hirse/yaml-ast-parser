@@ -1,21 +1,17 @@
+/**
+ * Standard YAML's Failsafe schema.
+ * http://www.yaml.org/spec/1.2/spec.html#id2802346
+ */
 
+import { Schema } from '../schema';
+import { mapType } from '../type/map';
+import { seqType } from '../type/seq';
+import { strType } from '../type/str';
 
-// Standard YAML's Failsafe schema.
-// http://www.yaml.org/spec/1.2/spec.html#id2802346
-
-
-'use strict';
-
-
-declare function require(n:string):any
-
-var Schema = require('../schema');
-
-
-export = new Schema({
+export const failsafeSchema = new Schema({
   explicit: [
-    require('../type/str'),
-    require('../type/seq'),
-    require('../type/map')
+    mapType,
+    seqType,
+    strType
   ]
 });

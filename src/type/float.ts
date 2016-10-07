@@ -1,11 +1,7 @@
+import * as common from '../common';
+import { Type } from '../type';
 
-
-'use strict';
-
-import common = require('../common');
-import Type   = require('../type');
-
-var YAML_FLOAT_PATTERN = new RegExp(
+let YAML_FLOAT_PATTERN = new RegExp(
   '^(?:[-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+][0-9]+)?' +
   '|\\.[0-9_]+(?:[eE][-+][0-9]+)?' +
   '|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*' +
@@ -17,7 +13,7 @@ function resolveYamlFloat(data) {
     return false;
   }
 
-  var value, sign, base, digits;
+  let value, sign, base, digits;
 
   if (!YAML_FLOAT_PATTERN.test(data)) {
     return false;
@@ -26,7 +22,7 @@ function resolveYamlFloat(data) {
 }
 
 function constructYamlFloat(data) {
-  var value, sign, base, digits;
+  let value, sign, base, digits;
 
   value  = data.replace(/_/g, '').toLowerCase();
   sign   = '-' === value[0] ? -1 : 1;
@@ -100,7 +96,7 @@ function isFloat(object) {
          (0 !== object % 1 || common.isNegativeZero(object));
 }
 
-export= new Type('tag:yaml.org,2002:float', {
+export const floatType = new Type('tag:yaml.org,2002:float', {
   kind: 'scalar',
   resolve: resolveYamlFloat,
   construct: constructYamlFloat,

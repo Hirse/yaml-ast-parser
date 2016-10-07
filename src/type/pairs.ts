@@ -1,18 +1,14 @@
+import { Type } from '../type';
 
-
-'use strict';
-
-import Type = require('../type');
-
-var _toString = Object.prototype.toString;
+let _toString = Object.prototype.toString;
 
 function resolveYamlPairs(data) {
   if (null === data) {
     return true;
   }
 
-  var index, length, pair, keys, result,
-      object = data;
+  let index, length, pair, keys, result,
+    object = data;
 
   result = new Array(object.length);
 
@@ -29,7 +25,7 @@ function resolveYamlPairs(data) {
       return false;
     }
 
-    result[index] = [ keys[0], pair[keys[0]] ];
+    result[index] = [keys[0], pair[keys[0]]];
   }
 
   return true;
@@ -40,8 +36,8 @@ function constructYamlPairs(data) {
     return [];
   }
 
-  var index, length, pair, keys, result,
-      object = data;
+  let index, length, pair, keys, result,
+    object = data;
 
   result = new Array(object.length);
 
@@ -50,13 +46,13 @@ function constructYamlPairs(data) {
 
     keys = Object.keys(pair);
 
-    result[index] = [ keys[0], pair[keys[0]] ];
+    result[index] = [keys[0], pair[keys[0]]];
   }
 
   return result;
 }
 
-export = new Type('tag:yaml.org,2002:pairs', {
+export const pairsType = new Type('tag:yaml.org,2002:pairs', {
   kind: 'sequence',
   resolve: resolveYamlPairs,
   construct: constructYamlPairs

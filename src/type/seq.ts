@@ -1,10 +1,8 @@
+import { Type } from '../type';
 
-
-'use strict';
-
-import Type = require('../type');
-
-export = new Type('tag:yaml.org,2002:seq', {
+export const seqType = new Type('tag:yaml.org,2002:seq', {
   kind: 'sequence',
-  construct: function (data) { return null !== data ? data : []; }
+  construct: (data) => {
+    return null !== data ? data : [];
+  }
 });

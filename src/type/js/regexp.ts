@@ -1,8 +1,4 @@
-
-
-'use strict';
-
-import Type = require('../../type');
+import { Type } from '../../type';
 
 function resolveJavascriptRegExp(data) {
   if (null === data) {
@@ -13,7 +9,7 @@ function resolveJavascriptRegExp(data) {
     return false;
   }
 
-  var regexp = data,
+  let regexp = data,
       tail   = /\/([gim]*)$/.exec(data),
       modifiers = '';
 
@@ -32,7 +28,7 @@ function resolveJavascriptRegExp(data) {
   }
 
   try {
-    var dummy = new RegExp(regexp, modifiers);
+    let dummy = new RegExp(regexp, modifiers);
     return true;
   } catch (error) {
     return false;
@@ -40,7 +36,7 @@ function resolveJavascriptRegExp(data) {
 }
 
 function constructJavascriptRegExp(data) {
-  var regexp = data,
+  let regexp = data,
       tail   = /\/([gim]*)$/.exec(data),
       modifiers = '';
 
@@ -56,7 +52,7 @@ function constructJavascriptRegExp(data) {
 }
 
 function representJavascriptRegExp(object /*, style*/) {
-  var result = '/' + object.source + '/';
+  let result = '/' + object.source + '/';
 
   if (object.global) {
     result += 'g';
@@ -77,7 +73,7 @@ function isRegExp(object) {
   return '[object RegExp]' === Object.prototype.toString.call(object);
 }
 
-export = new Type('tag:yaml.org,2002:js/regexp', {
+export const regexpType = new Type('tag:yaml.org,2002:js/regexp', {
   kind: 'scalar',
   resolve: resolveJavascriptRegExp,
   construct: constructJavascriptRegExp,

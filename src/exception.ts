@@ -1,21 +1,19 @@
+import { Mark } from './mark';
 
-import Mark=require("./mark")
-'use strict';
-class YAMLException {
+export class YAMLException {
+  message: string;
+  reason: string;
+  name: string;
+  mark: Mark;
 
-  message:string
-  reason:string
-  name:string
-  mark:Mark
-
-  constructor(reason:string, mark:Mark=null) {
+  constructor(reason: string, mark: Mark = null) {
     this.name = 'YAMLException';
     this.reason = reason;
     this.mark = mark;
     this.message = this.toString(false);
   }
 
-  toString(compact:boolean=false){
+  toString(compact: boolean = false) {
     var result;
 
     result = 'JS-YAML: ' + (this.reason || '(unknown reason)');
@@ -25,7 +23,5 @@ class YAMLException {
     }
 
     return result;
-
   }
 }
-export=YAMLException

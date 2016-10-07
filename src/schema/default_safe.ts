@@ -1,31 +1,32 @@
+/**
+ * JS-YAML's default schema for `safeLoad` function.
+ * It is not described in the YAML specification.
+ *
+ * This schema is based on standard YAML's Core schema and includes most of
+ * extra types described at YAML tag repository. (http://yaml.org/type/)
+ */
 
+import { Schema } from '../schema';
+import { binaryType } from '../type/binary';
+import { mergeType } from '../type/merge';
+import { omapType } from '../type/omap';
+import { pairsType } from '../type/pairs';
+import { setType } from '../type/set';
+import { timestampType } from '../type/timestamp';
+import { coreSchema } from './core';
 
-// JS-YAML's default schema for `safeLoad` function.
-// It is not described in the YAML specification.
-//
-// This schema is based on standard YAML's Core schema and includes most of
-// extra types described at YAML tag repository. (http://yaml.org/type/)
-
-
-'use strict';
-
-
-
-declare function require(n:string):any
-import Schema = require('../schema');
-var schema=new Schema({
+export const defaultSafeSchema = new Schema({
   include: [
-    require('./core')
+    coreSchema
   ],
   implicit: [
-    require('../type/timestamp'),
-    require('../type/merge')
+    timestampType,
+    mergeType
   ],
   explicit: [
-    require('../type/binary'),
-    require('../type/omap'),
-    require('../type/pairs'),
-    require('../type/set')
+    binaryType,
+    omapType,
+    pairsType,
+    setType
   ]
-})
-export = schema;
+});

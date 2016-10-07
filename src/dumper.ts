@@ -1,42 +1,36 @@
+import * as common from './common';
+import { YAMLException } from './exception';
+import * as DEFAULT_FULL_SCHEMA from './schema/default_full';
+import * as DEFAULT_SAFE_SCHEMA from './schema/default_safe';
 
+let _toString       = Object.prototype.toString;
+let _hasOwnProperty = Object.prototype.hasOwnProperty;
 
-'use strict';
-declare function require(n:string):any
-/*eslint-disable no-use-before-define*/
+let CHAR_TAB                  = 0x09; /* Tab */
+let CHAR_LINE_FEED            = 0x0A; /* LF */
+let CHAR_CARRIAGE_RETURN      = 0x0D; /* CR */
+let CHAR_SPACE                = 0x20; /* Space */
+let CHAR_EXCLAMATION          = 0x21; /* ! */
+let CHAR_DOUBLE_QUOTE         = 0x22; /* " */
+let CHAR_SHARP                = 0x23; /* # */
+let CHAR_PERCENT              = 0x25; /* % */
+let CHAR_AMPERSAND            = 0x26; /* & */
+let CHAR_SINGLE_QUOTE         = 0x27; /* ' */
+let CHAR_ASTERISK             = 0x2A; /* * */
+let CHAR_COMMA                = 0x2C; /* , */
+let CHAR_MINUS                = 0x2D; /* - */
+let CHAR_COLON                = 0x3A; /* : */
+let CHAR_GREATER_THAN         = 0x3E; /* > */
+let CHAR_QUESTION             = 0x3F; /* ? */
+let CHAR_COMMERCIAL_AT        = 0x40; /* @ */
+let CHAR_LEFT_SQUARE_BRACKET  = 0x5B; /* [ */
+let CHAR_RIGHT_SQUARE_BRACKET = 0x5D; /* ] */
+let CHAR_GRAVE_ACCENT         = 0x60; /* ` */
+let CHAR_LEFT_CURLY_BRACKET   = 0x7B; /* { */
+let CHAR_VERTICAL_LINE        = 0x7C; /* | */
+let CHAR_RIGHT_CURLY_BRACKET  = 0x7D; /* } */
 
-var common              = require('./common');
-var YAMLException       = require('./exception');
-var DEFAULT_FULL_SCHEMA = require('./schema/default_full');
-var DEFAULT_SAFE_SCHEMA = require('./schema/default_safe');
-
-var _toString       = Object.prototype.toString;
-var _hasOwnProperty = Object.prototype.hasOwnProperty;
-
-var CHAR_TAB                  = 0x09; /* Tab */
-var CHAR_LINE_FEED            = 0x0A; /* LF */
-var CHAR_CARRIAGE_RETURN      = 0x0D; /* CR */
-var CHAR_SPACE                = 0x20; /* Space */
-var CHAR_EXCLAMATION          = 0x21; /* ! */
-var CHAR_DOUBLE_QUOTE         = 0x22; /* " */
-var CHAR_SHARP                = 0x23; /* # */
-var CHAR_PERCENT              = 0x25; /* % */
-var CHAR_AMPERSAND            = 0x26; /* & */
-var CHAR_SINGLE_QUOTE         = 0x27; /* ' */
-var CHAR_ASTERISK             = 0x2A; /* * */
-var CHAR_COMMA                = 0x2C; /* , */
-var CHAR_MINUS                = 0x2D; /* - */
-var CHAR_COLON                = 0x3A; /* : */
-var CHAR_GREATER_THAN         = 0x3E; /* > */
-var CHAR_QUESTION             = 0x3F; /* ? */
-var CHAR_COMMERCIAL_AT        = 0x40; /* @ */
-var CHAR_LEFT_SQUARE_BRACKET  = 0x5B; /* [ */
-var CHAR_RIGHT_SQUARE_BRACKET = 0x5D; /* ] */
-var CHAR_GRAVE_ACCENT         = 0x60; /* ` */
-var CHAR_LEFT_CURLY_BRACKET   = 0x7B; /* { */
-var CHAR_VERTICAL_LINE        = 0x7C; /* | */
-var CHAR_RIGHT_CURLY_BRACKET  = 0x7D; /* } */
-
-var ESCAPE_SEQUENCES = {};
+let ESCAPE_SEQUENCES = {};
 
 ESCAPE_SEQUENCES[0x00]   = '\\0';
 ESCAPE_SEQUENCES[0x07]   = '\\a';
@@ -54,13 +48,13 @@ ESCAPE_SEQUENCES[0xA0]   = '\\_';
 ESCAPE_SEQUENCES[0x2028] = '\\L';
 ESCAPE_SEQUENCES[0x2029] = '\\P';
 
-var DEPRECATED_BOOLEANS_SYNTAX = [
+let DEPRECATED_BOOLEANS_SYNTAX = [
   'y', 'Y', 'yes', 'Yes', 'YES', 'on', 'On', 'ON',
   'n', 'N', 'no', 'No', 'NO', 'off', 'Off', 'OFF'
 ];
 
 function compileStyleMap(schema, map) {
-  var result, keys, index, length, tag, style, type;
+  let result, keys, index, length, tag, style, type;
 
   if (null === map) {
     return {};
@@ -90,7 +84,7 @@ function compileStyleMap(schema, map) {
 }
 
 function encodeHex(character) {
-  var string, handle, length;
+  let string, handle, length;
 
   string = character.toString(16).toUpperCase();
 
@@ -127,8 +121,8 @@ function State(options) {
   this.usedDuplicates = null;
 }
 
-function indentString(string:string, spaces) {
-  var ind = common.repeat(' ', spaces),
+function indentString(string: string, spaces) {
+  let ind = common.repeat(' ', spaces),
       position = 0,
       next = -1,
       result = '',
@@ -158,7 +152,7 @@ function generateNextLine(state, level) {
 }
 
 function testImplicitResolving(state, str) {
-  var index, length, type;
+  let index, length, type;
 
   for (index = 0, length = state.implicitTypes.length; index < length; index += 1) {
     type = state.implicitTypes[index];
@@ -178,7 +172,7 @@ function StringBuilder(source) {
 }
 
 StringBuilder.prototype.takeUpTo = function (position) {
-  var er;
+  let er;
 
   if (position < this.checkpoint) {
     er = new Error('position should be > checkpoint');
@@ -193,7 +187,7 @@ StringBuilder.prototype.takeUpTo = function (position) {
 };
 
 StringBuilder.prototype.escapeChar = function () {
-  var character, esc;
+  let character, esc;
 
   character = this.source.charCodeAt(this.checkpoint);
   esc = ESCAPE_SEQUENCES[character] || encodeHex(character);
@@ -210,7 +204,7 @@ StringBuilder.prototype.finish = function () {
 };
 
 function writeScalar(state, object, level) {
-  var simple, first, spaceWrap, folded, literal, single, double,
+  let simple, first, spaceWrap, folded, literal, single, double,
       sawLineFeed, linePosition, longestLine, indent, max, character,
       position, escapeSeq, hexEsc, previous, lineLength, modifier,
       trailingLineBreaks, result;
@@ -219,12 +213,12 @@ function writeScalar(state, object, level) {
     state.dump = "''";
     return;
   }
-  if (object.indexOf("!include")==0){
-    state.dump=""+object;//FIXME
+  if (object.indexOf('!include') == 0) {
+    state.dump = '' + object; // FIXME
     return;
   }
-  if (object.indexOf("!$$$novalue")==0){
-    state.dump="";//FIXME
+  if (object.indexOf('!$$$novalue') == 0) {
+    state.dump = ''; // FIXME
     return;
   }
   if (-1 !== DEPRECATED_BOOLEANS_SYNTAX.indexOf(object)) {
@@ -393,7 +387,7 @@ function writeScalar(state, object, level) {
 // breaks within the string), so it's important to only end with the exact
 // same number as we started.
 function fold(object, max) {
-  var result = '',
+  let result = '',
       position = 0,
       length = object.length,
       trailing = /\n+$/.exec(object),
@@ -431,7 +425,7 @@ function foldLine(line, max) {
     return line;
   }
 
-  var foldRe = /[^\s] [^\s]/g,
+  let foldRe = /[^\s] [^\s]/g,
       result = '',
       prevMatch = 0,
       foldStart = 0,
@@ -514,7 +508,7 @@ function needsHexEscape(character) {
 }
 
 function writeFlowSequence(state, level, object) {
-  var _result = '',
+  let _result = '',
       _tag    = state.tag,
       index,
       length;
@@ -534,7 +528,7 @@ function writeFlowSequence(state, level, object) {
 }
 
 function writeBlockSequence(state, level, object, compact) {
-  var _result = '',
+  let _result = '',
       _tag    = state.tag,
       index,
       length;
@@ -554,7 +548,7 @@ function writeBlockSequence(state, level, object, compact) {
 }
 
 function writeFlowMapping(state, level, object) {
-  var _result       = '',
+  let _result       = '',
       _tag          = state.tag,
       objectKeyList = Object.keys(object),
       index,
@@ -598,7 +592,7 @@ function writeFlowMapping(state, level, object) {
 }
 
 function writeBlockMapping(state, level, object, compact) {
-  var _result       = '',
+  let _result       = '',
       _tag          = state.tag,
       objectKeyList = Object.keys(object),
       index,
@@ -660,7 +654,7 @@ function writeBlockMapping(state, level, object, compact) {
 }
 
 function detectType(state, object, explicit) {
-  var _result, typeList, index, length, type, style;
+  let _result, typeList, index, length, type, style;
 
   typeList = explicit ? state.explicitTypes : state.implicitTypes;
 
@@ -705,7 +699,7 @@ function writeNode(state, level, object, block, compact) {
     detectType(state, object, true);
   }
 
-  var type = _toString.call(state.dump);
+  let type = _toString.call(state.dump);
 
   if (block) {
     block = (0 > state.flowLevel || state.flowLevel > level);
@@ -715,7 +709,7 @@ function writeNode(state, level, object, block, compact) {
     compact = false;
   }
 
-  var objectOrArray = '[object Object]' === type || '[object Array]' === type,
+  let objectOrArray = '[object Object]' === type || '[object Array]' === type,
       duplicateIndex,
       duplicate;
 
@@ -774,7 +768,7 @@ function writeNode(state, level, object, block, compact) {
 }
 
 function getDuplicateReferences(object, state) {
-  var objects = [],
+  let objects = [],
       duplicatesIndexes = [],
       index,
       length;
@@ -788,7 +782,7 @@ function getDuplicateReferences(object, state) {
 }
 
 function inspectNode(object, objects, duplicatesIndexes) {
-  var type = _toString.call(object),
+  let type = _toString.call(object),
       objectKeyList,
       index,
       length;
@@ -820,7 +814,7 @@ function inspectNode(object, objects, duplicatesIndexes) {
 export function dump(input, options) {
   options = options || {};
 
-  var state = new State(options);
+  let state = new State(options);
 
   getDuplicateReferences(input, state);
 

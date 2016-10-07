@@ -1,26 +1,14 @@
-
-
-'use strict';
-declare function require(n:string):any
-
-/*eslint-disable no-bitwise*/
-
-// A trick for browserified version.
-// Since we make browserifier to ignore `buffer` module, NodeBuffer will be undefined
-var NodeBuffer = require('buffer').Buffer;
-import Type       = require('../type');
-
+import { Type } from '../type';
 
 // [ 64, 65, 66 ] -> [ padding, CR, LF ]
-var BASE64_MAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r';
-
+let BASE64_MAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r';
 
 function resolveYamlBinary(data) {
   if (null === data) {
     return false;
   }
 
-  var code, idx, bitlen = 0, len = 0, max = data.length, map = BASE64_MAP;
+  let code, idx, bitlen = 0, len = 0, max = data.length, map = BASE64_MAP;
 
   // Convert one by one.
   for (idx = 0; idx < max; idx++) {
@@ -39,8 +27,8 @@ function resolveYamlBinary(data) {
   return (bitlen % 8) === 0;
 }
 
-function constructYamlBinary(data) {
-  var code, idx, tailbits,
+function constructYamlBinary(data): any[] | Buffer {
+  let code, idx, tailbits,
       input = data.replace(/[\r\n=]/g, ''), // remove CR/LF & padding to simplify scan
       max = input.length,
       map = BASE64_MAP,
@@ -75,15 +63,15 @@ function constructYamlBinary(data) {
   }
 
   // Wrap into Buffer for NodeJS and leave Array for browser
-  if (NodeBuffer) {
-    return new NodeBuffer(result);
+  if (Buffer) {
+    return new Buffer(result);
   }
 
   return result;
 }
 
 function representYamlBinary(object /*, style*/) {
-  var result = '', bits = 0, idx, tail,
+  let result = '', bits = 0, idx, tail,
       max = object.length,
       map = BASE64_MAP;
 
@@ -125,10 +113,10 @@ function representYamlBinary(object /*, style*/) {
 }
 
 function isBinary(object) {
-  return NodeBuffer && NodeBuffer.isBuffer(object);
+  return Buffer && Buffer.isBuffer(object);
 }
 
-export = new Type('tag:yaml.org,2002:binary', {
+export const binaryType = new Type('tag:yaml.org,2002:binary', {
   kind: 'scalar',
   resolve: resolveYamlBinary,
   construct: constructYamlBinary,
